@@ -19,11 +19,13 @@ from urlparse import urlparse
 
 class Blockchain:
 
-    def __init__(self):
+    def __init__(self, PORT):
         self.chain = []
         self.transactions = []
         self.create_block(proof=1, previous_hash='0')
         self.nodes = set()
+        self.sequence_number = 1
+        self.PORT = PORT
 
     def create_block(self, proof, previous_hash):
         block = {'index': len(self.chain) + 1,
@@ -72,9 +74,15 @@ class Blockchain:
         return True
 
     def add_transaction(self, sender, receiver, amount):
-        self.transactions.append({'sender': sender,
-                                  'receiver': receiver,
-                                  'amount': amount})
+        transaction_id = str(self.PORT) + str(self.sequence_number)
+        self.sequence_number+=1
+        self.transactions.append({
+                transaction_id : {
+                        'sender' : sender,
+                        'receiver' : receiver,
+                        'amount' : amount
+                    }
+            })
         previous_block = self.get_previous_block()
         return previous_block['index'] + 1
 
@@ -109,7 +117,8 @@ app = Flask(__name__)
 node_address = str(uuid4()).replace('-', '')
 
 # Creating a Blockchain
-blockchain = Blockchain()
+PORT = 5004
+blockchain = Blockchain(PORT)
 
 # Mining a new block
 @app.route('/mine_block', methods=['GET'])
@@ -153,6 +162,7 @@ def add_transaction():
     transaction_keys = ['sender', 'receiver', 'amount']
     if not all(key in json for key in transaction_keys):
         return 'Some elements of the transaction are missing', 400
+    
     index = blockchain.add_transaction(
         json['sender'], json['receiver'], json['amount'])
     response = {'message': 'This transaction will be added to Block'}
@@ -188,4 +198,4 @@ def replace_chain():
 
 # Running the app
 
-app.run(host='0.0.0.0', port=5004, debug=True)
+app.run(host='0.0.0.0', port=PORT, debug=True)
