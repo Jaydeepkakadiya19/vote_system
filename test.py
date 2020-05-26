@@ -37,18 +37,18 @@ for i in range(len(data['Name'])):
 
 total_vote_sent = 0
 app = Flask(__name__)
+i = 0
 
 
 @app.route('/send_vote', methods=['GET'])
 def send_vote():
-
     sk = user[i].private_key
     sign = sk.sign(vote[i])
-    txn = {'public_key': user[i].public_key.to_string.encode('hex'),
-           'sign': sign,
+    txn = {'public_key': user[i].public_key.to_string().encode('hex'),
+           'sign': sign.encode('hex'),
            'vote': vote[i]
            }
-    return jsonify(txn), 200
+    return json.dumps(dict(txn)), 200
 
 
 app.run(host='0.0.0.0', port=5005, debug=True)
