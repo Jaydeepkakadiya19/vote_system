@@ -157,7 +157,7 @@ def create_chain_from_dump(chain_dump):
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
     tx_data = request.get_json()
-    required_fields = ["pub_key", "vote"]    
+    required_fields = ["pub_key", "vote","sign"]    
     for field in required_fields:
         if not tx_data.get(field):
             return "Invalid transaction data", 404
@@ -165,8 +165,8 @@ def new_transaction():
     if "timestamp" not in tx_data:
         tx_data["timestamp"] = time.time()
         
-    if "sign" not in tx_data:    
-        tx_data["sign"] = utils.sign_transaction(tx_data["pub_key"], tx_data["vote"])
+    # if "sign" not in tx_data:    
+    #     tx_data["sign"] = utils.sign_transaction(tx_data["pub_key"], tx_data["vote"])
          
     verified = utils.verify_transaction(tx_data)
     if not verified:

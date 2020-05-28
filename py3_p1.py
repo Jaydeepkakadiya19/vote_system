@@ -346,16 +346,3 @@ def get_peers():
 # Running the app
 app.run(host='localhost', port=PORT, debug=True)
 
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
