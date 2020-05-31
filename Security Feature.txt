@@ -1,0 +1,2 @@
+Use Salt password:
+password-> add redundency ->SHA -> store
