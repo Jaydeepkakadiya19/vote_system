@@ -7,3 +7,8 @@ class Election:
 
 
 election = Election()
+#  Have to add counting func
+app = Flask(__name__)
+PORT = 5061
+
+
